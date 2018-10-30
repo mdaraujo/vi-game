@@ -15,6 +15,9 @@ function SceneManager(canvas) {
 
     const sceneSubjects = createSceneSubjects(scene);
 
+    var player;
+    var enemy;
+
     function buildScene() {
         const scene = new THREE.Scene();
         scene.background = new THREE.Color("#202020");
@@ -50,11 +53,14 @@ function SceneManager(canvas) {
     }
 
     function createSceneSubjects(scene) {
+        player = new Player(scene);
+        enemy = new Enemy(scene, player);
+
         const sceneSubjects = [
             new GeneralLights(scene),
             new Floor(scene),
-            new Player(scene),
-            new Enemy(scene)
+            player,
+            enemy
         ];
 
         return sceneSubjects;
@@ -71,7 +77,40 @@ function SceneManager(canvas) {
         for (let i = 0; i < sceneSubjects.length; i++)
             sceneSubjects[i].update(elapsedTime);
 
+        detectCollisions(elapsedTime);
+
         renderer.render(scene, camera);
+    }
+
+    function detectCollisions(elapsedTime) {
+        if (!player.isActive()) return;
+
+        // between player and enemies
+        if (enemy.isActive() && enemy.getCanDoDemage()) {
+            if (collisionBetweenCircles(player, enemy)) {
+                player.takeDemage(enemy.doDemage(elapsedTime));
+            }
+        }
+
+        // between bullets and enemies
+        player.getBullets().forEach(b => {
+            if (b.isActive()) {
+                if (enemy.isActive()) {
+                    if (collisionBetweenCircles(b, enemy)) {
+                        b.setActive(false);
+                        enemy.takeDemage(b.doDemage());
+                    }
+                }
+            }
+        });
+    }
+
+    function collisionBetweenCircles(obj1, obj2) {
+        var pos1 = obj1.getPosition();
+        var pos2 = obj2.getPosition();
+        var minDist = (obj1.getRadius() + obj2.getRadius()) ** 2;
+
+        return (pos2.x - pos1.x) ** 2 + (pos1.z - pos2.z) ** 2 <= minDist;
     }
 
     this.onWindowResize = function () {

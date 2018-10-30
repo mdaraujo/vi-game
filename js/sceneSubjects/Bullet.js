@@ -1,7 +1,10 @@
 function Bullet(scene) {
 
-	const speed = 40;
-	const maxDistance = 30;
+	const radius = 1;
+
+	var speed = 40;
+	var maxDistance = 30;
+	var demage = 1;
 
 	var mesh;
 	var direction;
@@ -20,7 +23,7 @@ function Bullet(scene) {
 			roughnessMap: roughnessTexture,
 			color: "#202020"
 		});
-		var geometry = new THREE.SphereGeometry(1, 12, 12);
+		var geometry = new THREE.SphereGeometry(radius, 12, 12);
 		mesh = new THREE.Mesh(geometry, material);
 		scene.add(mesh);
 	}
@@ -54,6 +57,18 @@ function Bullet(scene) {
 
 	this.isActive = function () {
 		return mesh.visible;
+	}
+
+	this.doDemage = function () {
+		return demage;
+	}
+
+	this.getPosition = function () {
+		return mesh.position;
+	}
+
+	this.getRadius = function () {
+		return radius;
 	}
 
 }

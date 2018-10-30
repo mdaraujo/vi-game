@@ -1,26 +1,20 @@
 function Player(scene) {
 
-	const height = 5;
+	const height = 5, radius = 2;
 	const maxBullets = 5;
 	const fireRate = 0.3;
 
 	var mesh;
 	var bullets;
 	var nextBullet;
-
-	var healthBar;
+	var health;
 	var healthSprite;
+	var healthTextures;
 
 	var clock = new THREE.Clock();
 	var keyboard = new THREEx.KeyboardState();
 
 	this.init = function () {
-
-		bullets = [];
-		nextBullet = -1;
-
-		healthBar = document.getElementById("health")
-		healthBar.value -= 10;
 
 		var loader = new THREE.TextureLoader();
 		var baseTexture = loader.load('images/rusty-panel/rusty-panel-albedo3b.png');
@@ -30,13 +24,17 @@ function Player(scene) {
 			map: baseTexture,
 			normalMap: normalTexture,
 			metalness: 0.6,
-			roughness: 0.1
+			roughness: 0.1,
+			color: '#93EE93'
 		});
 
-		var geometry = new THREE.CylinderGeometry(2, 2, height, 16);
+		var geometry = new THREE.CylinderGeometry(1.5, radius, height, 16);
 		mesh = new THREE.Mesh(geometry, material);
 		mesh.position.y = height / 2;
 		scene.add(mesh);
+
+		bullets = [];
+		nextBullet = -1;
 
 		// pool a fixed number of bullets to avoid instantiate every time
 		for (var i = 0; i < maxBullets; i++) {
@@ -49,14 +47,20 @@ function Player(scene) {
 			fire("X", -1, 1);
 		}
 
-		var healthTexture = loader.load('images/health/health5.png');
-		healthTexture.minFilter = THREE.LinearFilter;
-		var healthMat = new THREE.SpriteMaterial({ map: healthTexture });
+		health = 5;
+		healthTextures = [];
+
+		for (var i = 0; i <= health; i++) {
+			var healthTexture = loader.load('images/health/health' + i + '.png');
+			healthTexture.minFilter = THREE.LinearFilter;
+			healthTextures.push(healthTexture);
+		}
+
+		var healthMat = new THREE.SpriteMaterial({ map: healthTextures[health] });
 		healthSprite = new THREE.Sprite(healthMat);
-		healthSprite.position.copy(mesh.position);
-		healthSprite.position.setY(height * 0.5);
+		healthSprite.position.setY(height * 0.3);
 		healthSprite.scale.set(5, 5, 1);
-		scene.add(healthSprite);
+		mesh.add(healthSprite);
 	}
 
 	this.update = function (time) {
@@ -74,17 +78,13 @@ function Player(scene) {
 		if (keyboard.pressed("D"))
 			mesh.translateX(moveDistance);
 
-		healthSprite.position.copy(mesh.position);
-		healthSprite.position.setY(height);
 
 		if (time >= nextBullet) {
 			if (keyboard.pressed("up")) {
 				fire("Z", -1, time);
-				healthBar.value += 10;
 			}
 			else if (keyboard.pressed("down")) {
 				fire("Z", 1, time);
-				healthBar.value -= 10;
 			}
 			else if (keyboard.pressed("right")) {
 				fire("X", 1, time);
@@ -116,6 +116,36 @@ function Player(scene) {
 			}
 		}
 		nextBullet = time + fireRate;
+	}
+
+	this.takeDemage = function (demage) {
+		if (demage <= 0) return;
+		health -= demage;
+		if (health < 0) {
+			this.setActive(false);
+			return;
+		}
+		healthSprite.material = new THREE.SpriteMaterial({ map: healthTextures[health] });
+	}
+
+	this.setActive = function (active) {
+		mesh.visible = active;
+	}
+
+	this.isActive = function () {
+		return mesh.visible;
+	}
+
+	this.getBullets = function () {
+		return bullets;
+	}
+
+	this.getPosition = function () {
+		return mesh.position;
+	}
+
+	this.getRadius = function () {
+		return radius;
 	}
 
 }
