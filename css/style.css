@@ -1,0 +1,19 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    overflow: hidden;
+    color: #ffffff;
+    font-family: Monospace;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #000000;
+}
+
+#hud {
+    text-align: center;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    margin: 5px;
+}
