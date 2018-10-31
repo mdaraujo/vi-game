@@ -32,7 +32,7 @@ function Enemy(scene, player) {
 			color: '#4286f4'
 		});
 
-		var geometry = new THREE.CylinderGeometry(1, radius, height, 16);
+		var geometry = new THREE.CylinderGeometry(radius / 2, radius, height, 32);
 		mesh = new THREE.Mesh(geometry, material);
 		mesh.position.y = height / 2;
 		mesh.position.x = 200; // instantiate out of map

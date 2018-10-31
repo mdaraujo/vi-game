@@ -14,14 +14,12 @@ function Bullet(scene) {
 	this.init = function () {
 		var loader = new THREE.TextureLoader();
 		var baseTexture = loader.load('images/oxidized-copper/oxidized-copper-albedo.png');
-		var normalTexture = loader.load('images/oxidized-copper/oxidized-copper-normal-ue.png');
-		var roughnessTexture = loader.load('images/oxidized-copper/oxidized-copper-roughness.png');
 
 		var material = new THREE.MeshStandardMaterial({
 			map: baseTexture,
-			normalMap: normalTexture,
-			roughnessMap: roughnessTexture,
-			color: "#202020"
+			metalness: 0.75,
+			roughness: 0.3,
+			color: '#5BB55F'
 		});
 		var geometry = new THREE.SphereGeometry(radius, 12, 12);
 		mesh = new THREE.Mesh(geometry, material);

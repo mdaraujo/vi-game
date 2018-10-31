@@ -29,7 +29,7 @@ function Player(scene) {
 			color: '#93EE93'
 		});
 
-		var geometry = new THREE.CylinderGeometry(1.5, radius, height, 16);
+		var geometry = new THREE.CylinderGeometry(radius, radius * 0.5, height, 32);
 		mesh = new THREE.Mesh(geometry, material);
 		mesh.position.y = height / 2;
 		scene.add(mesh);
@@ -43,9 +43,6 @@ function Player(scene) {
 			bullet.init();
 			bullet.setActive(false);
 			bullets.push(bullet);
-
-			// instantiate bullets to avoid frame drops on first fires
-			fire("X", -1, 1);
 		}
 
 		health = 5;
