@@ -7,9 +7,9 @@ function Bullet(scene) {
 	var demage = 1;
 
 	var mesh;
-	var direction;
-	var rotation;
-	var initialPosition;
+	var direction = "X";
+	var rotation = 1;
+	var initialPosition = new THREE.Vector3(20, 0, 0);
 
 	this.init = function () {
 		var loader = new THREE.TextureLoader();

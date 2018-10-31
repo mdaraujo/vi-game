@@ -54,13 +54,13 @@ function SceneManager(canvas) {
 
     function createSceneSubjects(scene) {
         player = new Player(scene);
-        enemy = new Enemy(scene, player);
+        enemySpawner = new EnemySpawner(scene, player);
 
         const sceneSubjects = [
             new GeneralLights(scene),
             new Floor(scene),
             player,
-            enemy
+            enemySpawner
         ];
 
         return sceneSubjects;
@@ -86,21 +86,25 @@ function SceneManager(canvas) {
         if (!player.isActive()) return;
 
         // between player and enemies
-        if (enemy.isActive() && enemy.getCanDoDemage()) {
-            if (collisionBetweenCircles(player, enemy)) {
-                player.takeDemage(enemy.doDemage(elapsedTime));
+        enemySpawner.getEnemies().forEach(enemy => {
+            if (enemy.isActive() && enemy.getCanDoDemage()) {
+                if (collisionBetweenCircles(player, enemy)) {
+                    player.takeDemage(enemy.doDemage(elapsedTime));
+                }
             }
-        }
+        });
 
         // between bullets and enemies
         player.getBullets().forEach(b => {
             if (b.isActive()) {
-                if (enemy.isActive()) {
-                    if (collisionBetweenCircles(b, enemy)) {
-                        b.setActive(false);
-                        enemy.takeDemage(b.doDemage());
+                enemySpawner.getEnemies().forEach(enemy => {
+                    if (enemy.isActive()) {
+                        if (collisionBetweenCircles(b, enemy)) {
+                            b.setActive(false);
+                            enemy.takeDemage(b.doDemage());
+                        }
                     }
-                }
+                });
             }
         });
     }

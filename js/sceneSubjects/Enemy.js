@@ -12,6 +12,12 @@ function Enemy(scene, player) {
 	var nextDemage = -1;
 	var canDoDemage = true;
 
+	var speed = 10;
+	// var moveRate = 0.3;
+	// var nextMove = -1;
+	// var nextPosition;
+	// var isMoving = false;
+
 	this.init = function () {
 
 		var loader = new THREE.TextureLoader();
@@ -29,8 +35,7 @@ function Enemy(scene, player) {
 		var geometry = new THREE.CylinderGeometry(1, radius, height, 16);
 		mesh = new THREE.Mesh(geometry, material);
 		mesh.position.y = height / 2;
-		mesh.position.z = -30;
-		mesh.position.x = -30;
+		mesh.position.x = 200; // instantiate out of map
 		scene.add(mesh);
 
 		health = 5;
@@ -49,12 +54,45 @@ function Enemy(scene, player) {
 		mesh.add(healthSprite);
 	}
 
-	this.update = function (time) {
-		//console.log(player.getPosition());
+	this.update = function (time, delta) {
 
 		if (time >= nextDemage) {
 			canDoDemage = true;
 		}
+
+		// if (time >= nextMove) {
+		// 	console.log("enemy move");
+		// 	isMoving = true;
+		// 	nextMove = time + moveRate;
+		// }
+		// if (isMoving) {
+		// }
+
+		// subtract (= difference vector)
+		var dx = player.getPosition().x - mesh.position.x;
+		var dy = player.getPosition().z - mesh.position.z;
+
+		// normalize (= direction vector)
+		// (a direction vector has a length of 1)
+		var length = Math.sqrt(dx * dx + dy * dy);
+		if (length > 0.1) {
+			dx /= length;
+			dy /= length;
+
+			// move
+			// delta is the elapsed time in seconds
+			// SPEED is the speed in units per second (UPS)
+			mesh.position.x += dx * speed * delta;
+			mesh.position.z += dy * speed * delta;
+		}
+	}
+
+	this.respawn = function (position) {
+		mesh.position.x = position.x;
+		mesh.position.z = position.z;
+		health = 5;
+		updateHealthSprite();
+		this.setActive(true);
 	}
 
 	this.takeDemage = function (demage) {
@@ -64,6 +102,10 @@ function Enemy(scene, player) {
 			this.setActive(false);
 			return;
 		}
+		updateHealthSprite();
+	}
+
+	function updateHealthSprite() {
 		healthSprite.material = new THREE.SpriteMaterial({ map: healthTextures[health] });
 	}
 

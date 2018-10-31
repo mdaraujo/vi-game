@@ -1,6 +1,7 @@
 function Player(scene) {
 
 	const height = 5, radius = 2;
+	const speed = 20;
 	const maxBullets = 5;
 	const fireRate = 0.3;
 
@@ -66,7 +67,7 @@ function Player(scene) {
 	this.update = function (time) {
 
 		var delta = clock.getDelta(); // seconds.
-		var moveDistance = 20 * delta; // 20 pixels per second
+		var moveDistance = speed * delta; // speed pixels per second
 
 		// move forwards/backwards/left/right
 		if (keyboard.pressed("W"))
