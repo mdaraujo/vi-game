@@ -132,6 +132,14 @@ function Enemy(scene, player) {
 		return mesh.position;
 	}
 
+	this.setPositionX = function (x) {
+		mesh.position.x = x;
+	}
+
+	this.setPositionZ = function (z) {
+		mesh.position.z = z;
+	}
+
 	this.getRadius = function () {
 		return radius;
 	}

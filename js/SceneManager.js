@@ -107,6 +107,43 @@ function SceneManager(canvas) {
                 });
             }
         });
+
+        // between enemies
+        var enemies = enemySpawner.getEnemies();
+        for (var i = 0; i < enemies.length - 1; i++) {
+            var e1 = enemies[i];
+            if (e1.isActive()) {
+                for (var j = i + 1; j < enemies.length; j++) {
+                    var e2 = enemies[j];
+                    if (e2.isActive()) {
+                        if (collisionBetweenCircles(e1, e2)) {
+
+                            var pos1 = e1.getPosition();
+                            var pos2 = e2.getPosition();
+                            var dx = pos1.x - pos2.x;
+                            var dy = pos1.z - pos2.z;
+
+                            var length = Math.sqrt(dx * dx + dy * dy);
+
+                            var intersection = 2 * e1.getRadius() - length + (e1.getRadius() * 0.01);
+
+                            dx /= length;
+                            dy /= length;
+
+                            dx *= intersection / 2;
+                            dy *= intersection / 2;
+
+                            e1.setPositionX(pos1.x + dx);
+                            e1.setPositionZ(pos1.z + dy);
+
+                            e2.setPositionX(pos2.x - dx);
+                            e2.setPositionZ(pos2.z - dy);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     function collisionBetweenCircles(obj1, obj2) {
