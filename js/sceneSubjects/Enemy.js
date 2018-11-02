@@ -1,4 +1,4 @@
-function Enemy(scene, player) {
+function Enemy(scene, player, hud) {
 
 	const height = 4, radius = 2;
 
@@ -99,6 +99,7 @@ function Enemy(scene, player) {
 		if (demage <= 0) return;
 		health -= demage;
 		if (health <= 0) {
+			hud.addKill();
 			this.setActive(false);
 			return;
 		}

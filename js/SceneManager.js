@@ -13,10 +13,10 @@ function SceneManager(canvas) {
     const renderer = buildRender(screenDimensions);
     camera = buildCamera(screenDimensions, scene);
 
-    const sceneSubjects = createSceneSubjects(scene);
-
+    var hud;
     var player;
-    var enemy;
+    var enemySpawner;
+    const sceneSubjects = createSceneSubjects(scene);
 
     function buildScene() {
         const scene = new THREE.Scene();
@@ -44,8 +44,8 @@ function SceneManager(canvas) {
         const farPlane = 20000;
         const camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
 
-        camera.position.set(0, 50, 40);
-        camera.lookAt(scene.position);
+        camera.position.set(0, 85, 87);
+        camera.rotation.x = 0.77;
 
         new THREE.OrbitControls(camera);
 
@@ -53,14 +53,16 @@ function SceneManager(canvas) {
     }
 
     function createSceneSubjects(scene) {
+        hud = new HUD(scene);
         player = new Player(scene);
-        enemySpawner = new EnemySpawner(scene, player);
+        enemySpawner = new EnemySpawner(scene, player, hud);
 
         const sceneSubjects = [
             new GeneralLights(scene),
             new Floor(scene),
             player,
-            enemySpawner
+            enemySpawner,
+            hud,
         ];
 
         return sceneSubjects;

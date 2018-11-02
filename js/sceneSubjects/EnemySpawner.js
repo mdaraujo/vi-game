@@ -1,4 +1,4 @@
-function EnemySpawner(scene, player) {
+function EnemySpawner(scene, player, hud) {
 
 	const maxEnemies = 5;
 	const spawnRate = 3;
@@ -18,7 +18,7 @@ function EnemySpawner(scene, player) {
 
 		// pool a fixed number of enemies to avoid instantiate every time
 		for (var i = 0; i < maxEnemies; i++) {
-			var enemy = new Enemy(scene, player);
+			var enemy = new Enemy(scene, player, hud);
 			enemy.init();
 			enemy.setActive(false);
 			enemies.push(enemy);
