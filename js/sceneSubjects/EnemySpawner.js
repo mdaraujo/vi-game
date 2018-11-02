@@ -1,11 +1,11 @@
 function EnemySpawner(scene, player, hud) {
 
-	const maxEnemies = 5;
-	const spawnRate = 3;
+	const maxEnemies = 12;
+	const spawnRate = 2.5;
 
 	var enemies;
 	var nextEnemy;
-	var spawnPosition;
+	var spawnPositions;
 
 	var clock = new THREE.Clock();
 	var delta;
@@ -14,7 +14,11 @@ function EnemySpawner(scene, player, hud) {
 
 		enemies = [];
 		nextEnemy = -1;
-		spawnPosition = new THREE.Vector3(-60, 0, -60);
+		spawnPositions = []
+		spawnPositions.push(new THREE.Vector3(-floorWidth / 2, 0, -floorHeight / 2));
+		spawnPositions.push(new THREE.Vector3(-floorWidth / 2, 0, floorHeight / 2));
+		spawnPositions.push(new THREE.Vector3(floorWidth / 2, 0, -floorHeight / 2));
+		spawnPositions.push(new THREE.Vector3(floorWidth / 2, 0, floorHeight / 2));
 
 		// pool a fixed number of enemies to avoid instantiate every time
 		for (var i = 0; i < maxEnemies; i++) {
@@ -31,7 +35,8 @@ function EnemySpawner(scene, player, hud) {
 
 			for (var i = 0; i < enemies.length; i++) {
 				if (!enemies[i].isActive()) {
-					enemies[i].respawn(spawnPosition);
+					var pos = Math.floor(Math.random() * spawnPositions.length);
+					enemies[i].respawn(spawnPositions[pos]);
 					break;
 				}
 			}

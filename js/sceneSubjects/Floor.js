@@ -1,3 +1,6 @@
+const floorWidth = 100;
+const floorHeight = 100;
+
 function Floor(scene) {
 
 	const repeatValue = 5;
@@ -22,7 +25,7 @@ function Floor(scene) {
 			side: THREE.DoubleSide
 		});
 
-		var geometry = new THREE.PlaneGeometry(100, 100, 4, 4);
+		var geometry = new THREE.PlaneGeometry(floorWidth, floorHeight, 4, 4);
 		mesh = new THREE.Mesh(geometry, material);
 
 		mesh.rotation.x = Math.PI / 2;
