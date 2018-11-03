@@ -13,7 +13,7 @@ function Bullet(scene) {
 
 	this.init = function () {
 		var loader = new THREE.TextureLoader();
-		var baseTexture = loader.load('images/oxidized-copper/oxidized-copper-albedo.png');
+		var baseTexture = loader.load('images/oxidized-copper/oxidized-copper-albedo.jpg');
 
 		var material = new THREE.MeshStandardMaterial({
 			map: baseTexture,

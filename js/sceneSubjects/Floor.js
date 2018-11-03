@@ -10,11 +10,11 @@ function Floor(scene) {
 	this.init = function () {
 
 		var loader = new THREE.TextureLoader();
-		var baseTexture = loader.load('images/tiledstone/tiledstone1_basecolor.png');
+		var baseTexture = loader.load('images/tiledstone/tiledstone1_basecolor.jpg');
 		baseTexture.wrapS = baseTexture.wrapT = THREE.RepeatWrapping;
 		baseTexture.repeat.set(repeatValue, repeatValue);
 
-		var normalTexture = loader.load('images/tiledstone/tiledstone1_normal-DX.png');
+		var normalTexture = loader.load('images/tiledstone/tiledstone1_normal-DX.jpg');
 		normalTexture.wrapS = normalTexture.wrapT = THREE.RepeatWrapping;
 		normalTexture.repeat.set(repeatValue, repeatValue);
 

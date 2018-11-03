@@ -18,8 +18,8 @@ function Player(scene) {
 	this.init = function () {
 
 		var loader = new THREE.TextureLoader();
-		var baseTexture = loader.load('images/rusty-panel/rusty-panel-albedo3b.png');
-		var normalTexture = loader.load('images/rusty-panel/rusty-panel-norma-dx.png');
+		var baseTexture = loader.load('images/rusty-panel/rusty-panel-albedo3b.jpg');
+		var normalTexture = loader.load('images/rusty-panel/rusty-panel-norma-dx.jpg');
 
 		var material = new THREE.MeshStandardMaterial({
 			map: baseTexture,
