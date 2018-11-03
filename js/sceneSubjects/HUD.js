@@ -3,7 +3,7 @@ function HUD(scene) {
     const size = 7, height = 1;
 
     var killCount;
-    var mesh;
+    var mesh = new THREE.Mesh();
     var geometry;
     var font;
 
@@ -55,7 +55,7 @@ function HUD(scene) {
             size: size,
             height: height
         });
-        
+
         mesh.geometry = geometry;
     }
 }

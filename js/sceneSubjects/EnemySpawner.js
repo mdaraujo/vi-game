@@ -1,8 +1,9 @@
 function EnemySpawner(scene, player, hud) {
 
 	const maxEnemies = 12;
-	const spawnRate = 2.5;
 
+	var spawnRate;
+	var nextSpawnRateChange;
 	var enemies;
 	var nextEnemy;
 	var spawnPositions;
@@ -12,6 +13,8 @@ function EnemySpawner(scene, player, hud) {
 
 	this.init = function () {
 
+		spawnRate = 3;
+		nextSpawnRateChange = 30;
 		enemies = [];
 		nextEnemy = -1;
 		spawnPositions = []
@@ -40,8 +43,13 @@ function EnemySpawner(scene, player, hud) {
 					break;
 				}
 			}
-
 			nextEnemy = time + spawnRate;
+		}
+
+		if (spawnRate > 0.5 && time >= nextSpawnRateChange) {
+
+			spawnRate -= 0.5;
+			nextSpawnRateChange = time + 30;
 		}
 
 		delta = clock.getDelta();
