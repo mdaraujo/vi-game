@@ -12,13 +12,19 @@ function Enemy(scene, player, hud) {
 	var nextDemage = -1;
 	var canDoDemage = true;
 
-	var speed = 10;
+	var type;
+	var speed;
+	const speedTypes = [13, 16, 20];
+	const colorTypes = ['#4286f4', '#706FB7', '#912522'];
 	// var moveRate = 0.3;
 	// var nextMove = -1;
 	// var nextPosition;
 	// var isMoving = false;
 
 	this.init = function () {
+
+		type = Math.floor(Math.random() * speedTypes.length);
+		speed = speedTypes[type];
 
 		var loader = new THREE.TextureLoader();
 		var baseTexture = loader.load('images/rusty-panel/rusty-panel-albedo3b.jpg');
@@ -27,7 +33,7 @@ function Enemy(scene, player, hud) {
 			map: baseTexture,
 			metalness: 1,
 			roughness: 0.6,
-			color: '#4286f4'
+			color: colorTypes[type]
 		});
 
 		var geometry = new THREE.CylinderGeometry(radius / 2, radius, height, 32);
@@ -89,6 +95,11 @@ function Enemy(scene, player, hud) {
 		mesh.position.z = position.z;
 		health = 5;
 		updateHealthSprite();
+
+		type = Math.floor(Math.random() * speedTypes.length);
+		speed = speedTypes[type];
+		mesh.material.color.set(colorTypes[type]);
+
 		this.setActive(true);
 	}
 
