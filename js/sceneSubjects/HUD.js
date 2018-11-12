@@ -7,6 +7,8 @@ function HUD(scene) {
     var nextTimeUpdate;
     var date;
 
+    var playButton;
+
     this.init = function () {
         killCounter = 0;
 
@@ -16,9 +18,11 @@ function HUD(scene) {
         timeElement = document.getElementById("time");
         nextTimeUpdate = 0;
 
+        playButton = document.getElementById("playBtn");
+        playButton.addEventListener("click", playBtnClick);
     }
 
-    this.update = function (time) {
+    this.update = function (time, delta) {
         if (time >= nextTimeUpdate) {
             date = new Date(null);
             date.setSeconds(time);
@@ -33,4 +37,19 @@ function HUD(scene) {
         killsElement.innerHTML = killCounter;
     }
 
+    function playBtnClick() {
+        isPaused = !isPaused;
+
+        if (isPaused) {
+            lastStopTime += masterClock.getElapsedTime();
+            masterClock.stop();
+            masterDelta.stop();
+            playButton.innerHTML = "PLAY";
+        }
+        else {
+            masterClock.start();
+            masterDelta.start();
+            playButton.innerHTML = "PAUSE";
+        }
+    }
 }

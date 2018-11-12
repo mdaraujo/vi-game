@@ -18,7 +18,7 @@ function GeneralLights(scene) {
 		scene.add(light2);
 	}
 
-	this.update = function (time) {
+	this.update = function (time, delta) {
 		cameraLight.position.setX(camera.position.x);
 		cameraLight.position.setY(camera.position.y);
 		cameraLight.position.setZ(camera.position.z);

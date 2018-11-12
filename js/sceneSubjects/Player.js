@@ -12,7 +12,6 @@ function Player(scene) {
 	var healthSprite;
 	var healthTextures;
 
-	var clock = new THREE.Clock();
 	var keyboard = new THREEx.KeyboardState();
 
 	this.init = function () {
@@ -61,9 +60,8 @@ function Player(scene) {
 		mesh.add(healthSprite);
 	}
 
-	this.update = function (time) {
+	this.update = function (time, delta) {
 
-		var delta = clock.getDelta(); // seconds.
 		var moveDistance = speed * delta; // speed pixels per second
 
 		// move forwards/backwards/left/right

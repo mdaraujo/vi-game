@@ -1,8 +1,12 @@
 var camera;
+var isPaused;
+var masterClock;
+var lastStopTime;
 
 function SceneManager(canvas) {
 
-    const clock = new THREE.Clock();
+    masterClock = new THREE.Clock();
+    lastStopTime = 0;
 
     const screenDimensions = {
         width: canvas.width,
@@ -71,21 +75,26 @@ function SceneManager(canvas) {
     this.init = function () {
         for (let i = 0; i < sceneSubjects.length; i++)
             sceneSubjects[i].init();
+
+        isPaused = true;
     }
 
     this.update = function () {
-        const elapsedTime = clock.getElapsedTime();
+        renderer.render(scene, camera);
+
+        if (isPaused) return;
+
+        const delta = masterClock.getDelta();
+        const elapsedTime = masterClock.getElapsedTime() + lastStopTime;
+
 
         for (let i = 0; i < sceneSubjects.length; i++)
-            sceneSubjects[i].update(elapsedTime);
+            sceneSubjects[i].update(elapsedTime, delta);
 
         detectCollisions(elapsedTime);
-
-        renderer.render(scene, camera);
     }
 
     function detectCollisions(elapsedTime) {
-        if (!player.isActive()) return;
 
         // between player and enemies
         enemySpawner.getEnemies().forEach(enemy => {

@@ -8,9 +8,6 @@ function EnemySpawner(scene, player, hud) {
 	var nextEnemy;
 	var spawnPositions;
 
-	var clock = new THREE.Clock();
-	var delta;
-
 	this.init = function () {
 
 		spawnRate = 3;
@@ -27,7 +24,7 @@ function EnemySpawner(scene, player, hud) {
 		}
 	}
 
-	this.update = function (time) {
+	this.update = function (time, delta) {
 
 		if (time >= nextEnemy) {
 
@@ -47,8 +44,6 @@ function EnemySpawner(scene, player, hud) {
 			spawnRate -= 0.5;
 			nextSpawnRateChange = time + 30;
 		}
-
-		delta = clock.getDelta();
 
 		enemies.forEach(e => {
 			if (e.isActive()) {

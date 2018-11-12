@@ -18,11 +18,11 @@ function Lab(scene) {
 
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.addEventListener("load", reqListener);
-		xmlhttp.open("GET", "labs/Ciber2005_FinalLab_Simple.xml", false);
+		xmlhttp.open("GET", "labs/Ciber2005_FinalLab_Simple.xml", true);
 		xmlhttp.send();
 	}
 
-	this.update = function (time) {
+	this.update = function (time, delta) {
 
 	}
 
