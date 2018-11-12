@@ -8,18 +8,20 @@ function HUD(scene) {
     var date;
 
     var playButton;
+    var gameOverElement;
 
     this.init = function () {
-        killCounter = 0;
 
         killsElement = document.getElementById("killCounter");
-        killsElement.innerHTML = killCounter;
 
         timeElement = document.getElementById("time");
-        nextTimeUpdate = 0;
 
         playButton = document.getElementById("playBtn");
         playButton.addEventListener("click", playBtnClick);
+
+        gameOverElement = document.getElementById("gameOver");
+
+        this.reset();
     }
 
     this.update = function (time, delta) {
@@ -43,13 +45,27 @@ function HUD(scene) {
         if (isPaused) {
             lastStopTime += masterClock.getElapsedTime();
             masterClock.stop();
-            masterDelta.stop();
             playButton.innerHTML = "PLAY";
         }
         else {
+            if (gameEnded) {
+                sceneManager.reset();
+            }
+
             masterClock.start();
-            masterDelta.start();
             playButton.innerHTML = "PAUSE";
         }
+    }
+
+    this.reset = function () {
+        killCounter = 0;
+        killsElement.innerHTML = killCounter;
+        nextTimeUpdate = 0;
+        gameOverElement.style.display = "none";
+    }
+
+    this.endGame = function () {
+        playButton.click();
+        gameOverElement.style.display = "block";
     }
 }

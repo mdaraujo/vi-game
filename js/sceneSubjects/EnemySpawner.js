@@ -10,10 +10,7 @@ function EnemySpawner(scene, player, hud) {
 
 	this.init = function () {
 
-		spawnRate = 3;
-		nextSpawnRateChange = 30;
 		enemies = [];
-		nextEnemy = -1;
 
 		// pool a fixed number of enemies to avoid instantiate every time
 		for (var i = 0; i < maxEnemies; i++) {
@@ -22,6 +19,7 @@ function EnemySpawner(scene, player, hud) {
 			enemy.setActive(false);
 			enemies.push(enemy);
 		}
+		this.reset();
 	}
 
 	this.update = function (time, delta) {
@@ -50,6 +48,16 @@ function EnemySpawner(scene, player, hud) {
 				e.update(time, delta);
 			}
 		});
+	}
+
+	this.reset = function () {
+		enemies.forEach(e => {
+			e.reset();
+		});
+
+		spawnRate = 3;
+		nextSpawnRateChange = 30;
+		nextEnemy = -1;
 	}
 
 	this.getEnemies = function () {

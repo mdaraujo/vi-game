@@ -2,11 +2,13 @@ var camera;
 var isPaused;
 var masterClock;
 var lastStopTime;
+var gameEnded;
 
 function SceneManager(canvas) {
 
     masterClock = new THREE.Clock();
     lastStopTime = 0;
+    gameEnded = false;
 
     const screenDimensions = {
         width: canvas.width,
@@ -163,6 +165,19 @@ function SceneManager(canvas) {
         var minDist = (obj1.getRadius() + obj2.getRadius()) ** 2;
 
         return (pos2.x - pos1.x) ** 2 + (pos1.z - pos2.z) ** 2 <= minDist;
+    }
+
+    this.reset = function () {
+        enemySpawner.reset();
+        player.reset();
+        hud.reset();
+        lastStopTime = 0;
+        gameEnded = false;
+    }
+
+    this.endGame = function () {
+        gameEnded = true;
+        hud.endGame();
     }
 
     this.onWindowResize = function () {

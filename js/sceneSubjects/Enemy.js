@@ -7,10 +7,10 @@ function Enemy(scene, player, hud) {
 	var healthSprite;
 	var healthTextures;
 
-	var demage = 1;
-	var demageRate = 1;
-	var nextDemage = -1;
-	var canDoDemage = true;
+	var demage;
+	var demageRate;
+	var nextDemage;
+	var canDoDemage;
 
 	var type;
 	var speed;
@@ -55,6 +55,8 @@ function Enemy(scene, player, hud) {
 		healthSprite.position.setY(height * 0.3);
 		healthSprite.scale.set(5, 5, 1);
 		mesh.add(healthSprite);
+
+		this.reset();
 	}
 
 	this.update = function (time, delta) {
@@ -96,6 +98,9 @@ function Enemy(scene, player, hud) {
 		health = 5;
 		updateHealthSprite();
 
+		nextDemage = -1;
+		canDoDemage = true;
+
 		type = Math.floor(Math.random() * speedTypes.length);
 		speed = speedTypes[type];
 		mesh.material.color.set(colorTypes[type]);
@@ -123,6 +128,14 @@ function Enemy(scene, player, hud) {
 		canDoDemage = false;
 		nextDemage = time + demageRate;
 		return demage;
+	}
+
+	this.reset = function () {
+		this.setActive(false);
+		demage = 1;
+		demageRate = 1;
+		nextDemage = -1;
+		canDoDemage = true;
 	}
 
 	this.getCanDoDemage = function () {

@@ -33,10 +33,8 @@ function Player(scene) {
 		mesh.position.y = height / 2;
 		scene.add(mesh);
 
-		bullets = [];
-		nextBullet = -1;
-
 		// pool a fixed number of bullets to avoid instantiate every time
+		bullets = [];
 		for (var i = 0; i < maxBullets; i++) {
 			var bullet = new Bullet(scene);
 			bullet.init();
@@ -46,7 +44,6 @@ function Player(scene) {
 
 		health = 5;
 		healthTextures = [];
-
 		for (var i = 0; i <= health; i++) {
 			var healthTexture = loader.load('images/health/health' + i + '.png');
 			healthTexture.minFilter = THREE.LinearFilter;
@@ -58,6 +55,8 @@ function Player(scene) {
 		healthSprite.position.setY(height * 0.3);
 		healthSprite.scale.set(5, 5, 1);
 		mesh.add(healthSprite);
+
+		this.reset();
 	}
 
 	this.update = function (time, delta) {
@@ -118,10 +117,24 @@ function Player(scene) {
 		if (demage <= 0) return;
 		health -= demage;
 		if (health < 0) {
-			this.setActive(false);
+			sceneManager.endGame();
 			return;
 		}
 		healthSprite.material = new THREE.SpriteMaterial({ map: healthTextures[health] });
+	}
+
+	this.reset = function () {
+		health = 5;
+		healthSprite.material = new THREE.SpriteMaterial({ map: healthTextures[health] });
+		mesh.position.x = 0;
+		mesh.position.z = 0;
+
+		bullets.forEach(b => {
+			if (b.isActive()) {
+				b.setActive(false);
+			}
+		});
+		nextBullet = -1;
 	}
 
 	this.setActive = function (active) {
