@@ -59,7 +59,7 @@ function SceneManager(canvas) {
 
         const sceneSubjects = [
             new GeneralLights(scene),
-            new Floor(scene),
+            new Lab(scene),
             player,
             enemySpawner,
             hud,
