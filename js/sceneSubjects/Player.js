@@ -10,19 +10,14 @@ function Player(scene) {
 	var nextBullet;
 	var health;
 	var healthSprite;
-	var healthTextures;
 
 	var keyboard = new THREEx.KeyboardState();
 
 	this.init = function () {
 
-		var loader = new THREE.TextureLoader();
-		var baseTexture = loader.load('images/rusty-panel/rusty-panel-albedo3b.jpg');
-		var normalTexture = loader.load('images/rusty-panel/rusty-panel-norma-dx.jpg');
-
 		var material = new THREE.MeshStandardMaterial({
-			map: baseTexture,
-			normalMap: normalTexture,
+			map: METAL_BASE_TEXTURE,
+			normalMap: METAL_NORMAL_TEXTURE,
 			metalness: 0.6,
 			roughness: 0.1,
 			color: '#93EE93'
@@ -43,14 +38,7 @@ function Player(scene) {
 		}
 
 		health = 5;
-		healthTextures = [];
-		for (var i = 0; i <= health; i++) {
-			var healthTexture = loader.load('images/health/health' + i + '.png');
-			healthTexture.minFilter = THREE.LinearFilter;
-			healthTextures.push(healthTexture);
-		}
-
-		var healthMat = new THREE.SpriteMaterial({ map: healthTextures[health] });
+		var healthMat = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 		healthSprite = new THREE.Sprite(healthMat);
 		healthSprite.position.setY(height * 0.3);
 		healthSprite.scale.set(5, 5, 1);
@@ -120,12 +108,12 @@ function Player(scene) {
 			sceneManager.endGame();
 			return;
 		}
-		healthSprite.material = new THREE.SpriteMaterial({ map: healthTextures[health] });
+		healthSprite.material = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 	}
 
 	this.reset = function () {
 		health = 5;
-		healthSprite.material = new THREE.SpriteMaterial({ map: healthTextures[health] });
+		healthSprite.material = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 		mesh.position.x = 0;
 		mesh.position.z = 0;
 

@@ -12,11 +12,9 @@ function Bullet(scene) {
 	var initialPosition = new THREE.Vector3(20, 0, 0);
 
 	this.init = function () {
-		var loader = new THREE.TextureLoader();
-		var baseTexture = loader.load('images/oxidized-copper/oxidized-copper-albedo.jpg');
 
 		var material = new THREE.MeshStandardMaterial({
-			map: baseTexture,
+			map: BULLET_BASE_TEXTURE,
 			metalness: 0.75,
 			roughness: 0.3,
 			color: '#5BB55F'

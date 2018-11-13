@@ -5,7 +5,6 @@ function Enemy(scene, player, hud) {
 	var mesh;
 	var health;
 	var healthSprite;
-	var healthTextures;
 
 	var demage;
 	var demageRate;
@@ -26,11 +25,9 @@ function Enemy(scene, player, hud) {
 		type = Math.floor(Math.random() * speedTypes.length);
 		speed = speedTypes[type];
 
-		var loader = new THREE.TextureLoader();
-		var baseTexture = loader.load('images/rusty-panel/rusty-panel-albedo3b.jpg');
-
 		var material = new THREE.MeshStandardMaterial({
-			map: baseTexture,
+			map: METAL_BASE_TEXTURE,
+			normalMap: METAL_NORMAL_TEXTURE,
 			metalness: 1,
 			roughness: 0.6,
 			color: colorTypes[type]
@@ -42,15 +39,7 @@ function Enemy(scene, player, hud) {
 		scene.add(mesh);
 
 		health = 5;
-		healthTextures = [];
-
-		for (var i = 0; i <= health; i++) {
-			var healthTexture = loader.load('images/health/health' + i + '.png');
-			healthTexture.minFilter = THREE.LinearFilter;
-			healthTextures.push(healthTexture);
-		}
-
-		var healthMat = new THREE.SpriteMaterial({ map: healthTextures[health] });
+		var healthMat = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 		healthSprite = new THREE.Sprite(healthMat);
 		healthSprite.position.setY(height * 0.3);
 		healthSprite.scale.set(5, 5, 1);
@@ -120,7 +109,7 @@ function Enemy(scene, player, hud) {
 	}
 
 	function updateHealthSprite() {
-		healthSprite.material = new THREE.SpriteMaterial({ map: healthTextures[health] });
+		healthSprite.material = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 	}
 
 	this.doDemage = function (time) {

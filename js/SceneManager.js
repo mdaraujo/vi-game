@@ -75,6 +75,8 @@ function SceneManager(canvas) {
     }
 
     this.init = function () {
+        new TextureManager();
+
         for (let i = 0; i < sceneSubjects.length; i++)
             sceneSubjects[i].init();
 

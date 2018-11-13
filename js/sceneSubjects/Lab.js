@@ -8,7 +8,16 @@ function Lab(scene) {
 	const floorTextureSize = 20;
 	const wallTextureSize = 8;
 
+	var wallMaterial;
+
 	this.init = function () {
+
+		wallMaterial = new THREE.MeshStandardMaterial({
+			map: WALL_BASE_TEXTURE,
+			normalMap: WALL_NORMAL_TEXTURE,
+			roughness: 0.52,
+			color: '#161c10'
+		});
 
 		if (window.XMLHttpRequest) {
 			xmlhttp = new XMLHttpRequest();
@@ -83,21 +92,9 @@ function Lab(scene) {
 
 	function createWall(width, height, depth, xMin, zMin) {
 
-		var material1 = getWallMaterial(depth, height);
-		var material2 = getWallMaterial(width, depth);
-		var material3 = getWallMaterial(width, height);
-
-		var materials = [];
-		materials.push(material1);
-		materials.push(material1);
-		materials.push(material2);
-		materials.push(material2);
-		materials.push(material3);
-		materials.push(material3);
-
 		var geometry = new THREE.BoxGeometry(width, height, depth);
 
-		var mesh = new THREE.Mesh(geometry, materials);
+		var mesh = new THREE.Mesh(geometry, wallMaterial);
 
 		mesh.position.y = height / 2;
 
@@ -109,43 +106,21 @@ function Lab(scene) {
 
 		scene.add(mesh);
 
-	}
+		var v = mesh.geometry.faceVertexUvs[0];
 
-	function getWallMaterial(x, y) {
-		var loader = new THREE.TextureLoader();
-		var baseTexture = loader.load('images/redbricks/redbricks-albedo.jpg');
-		var normalTexture = loader.load('images/redbricks/redbricks-normal.jpg');
-
-		baseTexture.wrapS = baseTexture.wrapT = THREE.RepeatWrapping;
-		baseTexture.repeat.set(x / wallTextureSize, y / wallTextureSize);
-
-		normalTexture.wrapS = normalTexture.wrapT = THREE.RepeatWrapping;
-		normalTexture.repeat.set(x / wallTextureSize, y / wallTextureSize);
-
-		var material = new THREE.MeshStandardMaterial({
-			map: baseTexture,
-			normalMap: normalTexture,
-			roughness: 0.52,
-			color: '#161c10'
-		});
-		return material;
+		setUv(v, 0, depth / wallTextureSize, height / wallTextureSize);
+		setUv(v, 1, width / wallTextureSize, depth / wallTextureSize);
+		setUv(v, 2, width / wallTextureSize, height / wallTextureSize);
 	}
 
 	function createFloor() {
-		var loader = new THREE.TextureLoader();
-		var baseTexture = loader.load('images/tiledstone/tiledstone1_basecolor.jpg');
-		baseTexture.wrapS = baseTexture.wrapT = THREE.RepeatWrapping;
-		baseTexture.repeat.set(labWidth / floorTextureSize, labHeight / floorTextureSize);
-
-		var normalTexture = loader.load('images/tiledstone/tiledstone1_normal-DX.jpg');
-		normalTexture.wrapS = normalTexture.wrapT = THREE.RepeatWrapping;
-		normalTexture.repeat.set(labWidth / floorTextureSize, labHeight / floorTextureSize);
+		FLOOR_BASE_TEXTURE.repeat.set(labWidth / floorTextureSize, labHeight / floorTextureSize);
+		FLOOR_NORMAL_TEXTURE.repeat.set(labWidth / floorTextureSize, labHeight / floorTextureSize);
 
 		var material = new THREE.MeshStandardMaterial({
-			map: baseTexture,
-			normalMap: normalTexture,
-			roughness: 0.6,
-			side: THREE.DoubleSide
+			map: FLOOR_BASE_TEXTURE,
+			normalMap: FLOOR_NORMAL_TEXTURE,
+			roughness: 0.6
 		});
 
 		var geometry = new THREE.PlaneGeometry(labWidth, labHeight, 4, 4);
