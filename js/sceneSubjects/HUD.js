@@ -17,9 +17,11 @@ function HUD(scene) {
         timeElement = document.getElementById("time");
 
         playButton = document.getElementById("playBtn");
-        playButton.addEventListener("click", playBtnClick);
+        playButton.addEventListener("click", playPauseBtnClick);
 
         gameOverElement = document.getElementById("gameOver");
+
+        document.addEventListener("keydown", onDocumentKeyDown, false);
 
         this.reset();
     }
@@ -39,7 +41,7 @@ function HUD(scene) {
         killsElement.innerHTML = killCounter;
     }
 
-    function playBtnClick() {
+    function playPauseBtnClick() {
         isPaused = !isPaused;
 
         if (isPaused) {
@@ -67,5 +69,15 @@ function HUD(scene) {
     this.endGame = function () {
         playButton.click();
         gameOverElement.style.display = "block";
+    }
+
+    function onDocumentKeyDown(event) {
+        // play/pause on space key click
+
+        var keyCode = event.which;
+
+        if (keyCode == 32) { // space key
+            playPauseBtnClick();
+        }
     }
 }

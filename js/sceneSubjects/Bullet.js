@@ -1,6 +1,7 @@
 function Bullet(scene) {
 
 	const radius = 1;
+	const textureRepeat = 3;
 
 	var speed = 40;
 	var maxDistance = 30;
@@ -13,13 +14,14 @@ function Bullet(scene) {
 
 	this.init = function () {
 
+		BULLET_BASE_TEXTURE.repeat.set(textureRepeat, textureRepeat);
+
 		var material = new THREE.MeshStandardMaterial({
 			map: BULLET_BASE_TEXTURE,
 			metalness: 0.75,
-			roughness: 0.3,
-			color: '#5BB55F'
+			roughness: 0.3
 		});
-		var geometry = new THREE.SphereGeometry(radius, 12, 12);
+		var geometry = new THREE.SphereGeometry(radius, 32, 32);
 		mesh = new THREE.Mesh(geometry, material);
 		scene.add(mesh);
 	}

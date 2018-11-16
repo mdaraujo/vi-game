@@ -30,7 +30,8 @@ function TextureManager() {
     METAL_BASE_TEXTURE = loader.load('images/rusty-panel/rusty-panel-albedo3b.jpg');
     METAL_NORMAL_TEXTURE = loader.load('images/rusty-panel/rusty-panel-norma-dx.jpg');
 
-    BULLET_BASE_TEXTURE = loader.load('images/oxidized-copper/oxidized-copper-albedo.jpg');
+    BULLET_BASE_TEXTURE = loader.load('images/bullet-pattern.jpg');
+    BULLET_BASE_TEXTURE.wrapS = BULLET_BASE_TEXTURE.wrapT = THREE.RepeatWrapping;
 
     for (var i = 0; i <= 5; i++) {
         var healthTexture = loader.load('images/health/health' + i + '.png');

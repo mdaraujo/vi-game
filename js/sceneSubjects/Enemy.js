@@ -1,6 +1,6 @@
 function Enemy(scene, player, hud) {
 
-	const height = 4, radius = 2;
+	const height = 5.5, radius = 2.2;
 
 	var mesh;
 	var health;

@@ -1,6 +1,7 @@
 function Player(scene) {
 
-	const height = 5, radius = 2;
+	const scale = 1.5;
+	const radius = scale * 0.4;
 	const speed = 20;
 	const maxBullets = 5;
 	const fireRate = 0.3;
@@ -13,19 +14,7 @@ function Player(scene) {
 
 	this.init = function () {
 
-		var material = new THREE.MeshStandardMaterial({
-			map: METAL_BASE_TEXTURE,
-			normalMap: METAL_NORMAL_TEXTURE,
-			metalness: 0.6,
-			roughness: 0.1,
-			color: '#93EE93'
-		});
-
-		var geometry = new THREE.CylinderGeometry(radius, radius * 0.5, height, 32);
-		mesh = new THREE.Mesh(geometry, material);
-		mesh.position.y = height / 2;
-		scene.add(mesh);
-
+		nextBullet = -1;
 		// pool a fixed number of bullets to avoid instantiate every time
 		bullets = [];
 		for (var i = 0; i < maxBullets; i++) {
@@ -38,40 +27,72 @@ function Player(scene) {
 		health = 5;
 		var healthMat = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 		healthSprite = new THREE.Sprite(healthMat);
-		healthSprite.position.setY(height * 0.5);
+		healthSprite.position.setY(scale * 2);
 		healthSprite.scale.set(5, 5, 1);
-		mesh.add(healthSprite);
 
-		this.reset();
+		var mtlLoader = new THREE.MTLLoader();
+		mtlLoader.setPath('models/Muhammer/');
+		var url = "Muhammer.mtl";
+		mtlLoader.load(url, function (materials) {
+
+			materials.preload();
+
+			var objLoader = new THREE.OBJLoader();
+			objLoader.setMaterials(materials);
+			objLoader.setPath('models/Muhammer/');
+			objLoader.load('Muhammer.obj', function (object) {
+
+				mesh = object;
+
+				mesh.scale.set(scale, scale, scale);
+
+				mesh.position.set(0, scale, 0);
+
+				mesh.add(healthSprite);
+
+				scene.add(mesh);
+
+			}, null, null);
+
+		});
 	}
 
 	this.update = function (time, delta) {
 
 		var moveDistance = speed * delta; // speed pixels per second
 
-		// move forwards/backwards/left/right
-		if (keyboard.pressed("W"))
-			mesh.translateZ(-moveDistance);
-		if (keyboard.pressed("S"))
-			mesh.translateZ(moveDistance);
-		if (keyboard.pressed("A"))
-			mesh.translateX(-moveDistance);
-		if (keyboard.pressed("D"))
-			mesh.translateX(moveDistance);
+		if (keyboard.pressed("W")) {
+			mesh.position.z -= moveDistance;
+		}
 
+		if (keyboard.pressed("S")) {
+			mesh.position.z += moveDistance;
+		}
+
+		if (keyboard.pressed("A")) {
+			mesh.position.x += -moveDistance;
+		}
+
+		if (keyboard.pressed("D")) {
+			mesh.position.x += moveDistance;
+		}
 
 		if (time >= nextBullet) {
 			if (keyboard.pressed("up")) {
 				fire("Z", -1, time);
+				mesh.rotation.y = Math.PI;
 			}
 			else if (keyboard.pressed("down")) {
 				fire("Z", 1, time);
+				mesh.rotation.y = 0;
 			}
 			else if (keyboard.pressed("right")) {
 				fire("X", 1, time);
+				mesh.rotation.y = Math.PI / 2;
 			}
 			else if (keyboard.pressed("left")) {
 				fire("X", -1, time);
+				mesh.rotation.y = -Math.PI / 2;
 			}
 		}
 
@@ -86,6 +107,7 @@ function Player(scene) {
 
 		var position = new THREE.Vector3();
 		mesh.getWorldPosition(position);
+		position.y += scale * 2;
 
 		for (var i = 0; i < maxBullets; i++) {
 			if (!bullets[i].isActive()) {
