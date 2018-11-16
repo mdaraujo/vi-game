@@ -1,7 +1,7 @@
 var labWidth;
 var labHeight;
 
-function Lab(scene) {
+function Lab(scene, lights) {
 
 	const scale = 5;
 
@@ -46,6 +46,8 @@ function Lab(scene) {
 
 		createFloor();
 		createSideWalls();
+
+		lights.init();
 
 		var xmlWalls = xmlDoc.getElementsByTagName('Wall');
 

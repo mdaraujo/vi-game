@@ -1,12 +1,16 @@
+// global variables
+const keyboard = new THREEx.KeyboardState();
+const masterClock = new THREE.Clock();
+
 var camera;
+var controls;
+
 var isPaused;
-var masterClock;
 var lastStopTime;
 var gameEnded;
 
 function SceneManager(canvas) {
 
-    masterClock = new THREE.Clock();
     lastStopTime = 0;
     gameEnded = false;
 
@@ -17,8 +21,9 @@ function SceneManager(canvas) {
 
     const scene = buildScene();
     const renderer = buildRender(screenDimensions);
-    camera = buildCamera(screenDimensions, scene);
 
+    var cameraSubject = new Camera(scene, screenDimensions);
+    var lights = new Lights(scene);
     var hud;
     var player;
     var enemySpawner;
@@ -43,29 +48,13 @@ function SceneManager(canvas) {
         return renderer;
     }
 
-    function buildCamera({ width, height }, scene) {
-        const aspectRatio = width / height;
-        const fieldOfView = 45;
-        const nearPlane = 0.1;
-        const farPlane = 20000;
-        const camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
-
-        camera.position.set(0, 85, 87);
-        camera.rotation.x = 0.77;
-
-        new THREE.OrbitControls(camera);
-
-        return camera;
-    }
-
     function createSceneSubjects(scene) {
         hud = new HUD(scene);
         player = new Player(scene);
         enemySpawner = new EnemySpawner(scene, player, hud);
 
         const sceneSubjects = [
-            new GeneralLights(scene),
-            new Lab(scene),
+            new Lab(scene, lights),
             player,
             enemySpawner,
             hud,
@@ -75,7 +64,10 @@ function SceneManager(canvas) {
     }
 
     this.init = function () {
-        new TextureManager();
+        new TextureManager(); // load textures
+
+        cameraSubject.init();
+        lights.init();
 
         for (let i = 0; i < sceneSubjects.length; i++)
             sceneSubjects[i].init();
@@ -86,11 +78,14 @@ function SceneManager(canvas) {
     this.update = function () {
         renderer.render(scene, camera);
 
-        if (isPaused) return;
-
         const delta = masterClock.getDelta();
         const elapsedTime = masterClock.getElapsedTime() + lastStopTime;
 
+        // camera and lights updates when paused
+        cameraSubject.update(elapsedTime, delta);
+        lights.update(elapsedTime, delta);
+
+        if (isPaused) return;
 
         for (let i = 0; i < sceneSubjects.length; i++)
             sceneSubjects[i].update(elapsedTime, delta);

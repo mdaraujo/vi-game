@@ -11,8 +11,6 @@ function Player(scene) {
 	var health;
 	var healthSprite;
 
-	var keyboard = new THREEx.KeyboardState();
-
 	this.init = function () {
 
 		var material = new THREE.MeshStandardMaterial({
