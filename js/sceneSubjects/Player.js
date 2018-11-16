@@ -38,7 +38,7 @@ function Player(scene) {
 		health = 5;
 		var healthMat = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 		healthSprite = new THREE.Sprite(healthMat);
-		healthSprite.position.setY(height * 0.3);
+		healthSprite.position.setY(height * 0.5);
 		healthSprite.scale.set(5, 5, 1);
 		mesh.add(healthSprite);
 
