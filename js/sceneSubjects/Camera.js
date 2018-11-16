@@ -9,7 +9,7 @@ function Camera(scene, { width, height }) {
         camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
         controls = new THREE.OrbitControls(camera);
 
-        setPosOne();
+        setPosTwo();
     }
 
     this.update = function (time, delta) {
@@ -29,24 +29,28 @@ function Camera(scene, { width, height }) {
     }
 
     function setPosOne() {
+        controls.reset();
         camera.position.set(0, 120, 0);
-        camera.rotation.x = 1.57;
+        camera.rotation.x = Math.PI / 2;
         controls.update();
     }
 
     function setPosTwo() {
+        controls.reset();
         camera.position.set(0, 85, 87);
         camera.rotation.x = 0.77;
         controls.update();
     }
 
     function setPosThree() {
+        controls.reset();
         camera.position.set(-118, 68, 42);
         camera.rotation.x = -1;
         controls.update();
     }
 
     function setPosFour() {
+        controls.reset();
         camera.position.set(118, 68, 42);
         camera.rotation.x = -1;
         controls.update();
