@@ -40,7 +40,7 @@ function EnemySpawner(scene, player, hud) {
 		if (spawnRate > 0.5 && time >= nextSpawnRateChange) {
 
 			spawnRate -= 0.5;
-			nextSpawnRateChange = time + 30;
+			nextSpawnRateChange = time + 45;
 		}
 
 		enemies.forEach(e => {

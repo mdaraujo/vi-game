@@ -25,6 +25,7 @@ function SceneManager(canvas) {
     var cameraSubject = new Camera(scene, screenDimensions);
     var lights = new Lights(scene);
     var hud;
+    var lab;
     var player;
     var enemySpawner;
     const sceneSubjects = createSceneSubjects(scene);
@@ -50,11 +51,12 @@ function SceneManager(canvas) {
 
     function createSceneSubjects(scene) {
         hud = new HUD(scene);
-        player = new Player(scene);
+        lab = new Lab(scene, lights);
+        player = new Player(scene, lab);
         enemySpawner = new EnemySpawner(scene, player, hud);
 
         const sceneSubjects = [
-            new Lab(scene, lights),
+            lab,
             player,
             enemySpawner,
             hud,
@@ -188,4 +190,23 @@ function SceneManager(canvas) {
 
         renderer.setSize(width, height);
     }
+}
+
+function collisionCircleRectangle(circle, rect) {
+    var circlePos = circle.getPosition();
+    var rectPos = rect.getPosition();
+
+    var dx = Math.abs(circlePos.x - rectPos.x);
+    var dy = Math.abs(circlePos.z - rectPos.z);
+
+    if (dx > (rect.getWidth() / 2 + circle.getRadius())) { return false; }
+    if (dy > (rect.getDepth() / 2 + circle.getRadius())) { return false; }
+
+    if (dx <= (rect.getWidth() / 2)) { return true; }
+    if (dy <= (rect.getDepth() / 2)) { return true; }
+
+    var cornerDistance_sq = (dx - rect.getWidth() / 2) ^ 2 +
+        (dy - rect.getDepth() / 2) ^ 2;
+
+    return (cornerDistance_sq <= (circle.getRadius() ^ 2));
 }

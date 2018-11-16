@@ -6,18 +6,12 @@ function Lab(scene, lights) {
 	const scale = 5;
 
 	const floorTextureSize = 20;
-	const wallTextureSize = 8;
 
-	var wallMaterial;
+	var walls;
 
 	this.init = function () {
 
-		wallMaterial = new THREE.MeshStandardMaterial({
-			map: WALL_BASE_TEXTURE,
-			normalMap: WALL_NORMAL_TEXTURE,
-			roughness: 0.52,
-			color: '#161c10'
-		});
+		walls = [];
 
 		if (window.XMLHttpRequest) {
 			xmlhttp = new XMLHttpRequest();
@@ -93,26 +87,9 @@ function Lab(scene, lights) {
 	}
 
 	function createWall(width, height, depth, xMin, zMin) {
-
-		var geometry = new THREE.BoxGeometry(width, height, depth);
-
-		var mesh = new THREE.Mesh(geometry, wallMaterial);
-
-		mesh.position.y = height / 2;
-
-		mesh.position.x = xMin + (width / 2);
-		mesh.position.z = -zMin - (depth / 2);
-
-		mesh.position.x -= labWidth / 2;
-		mesh.position.z += labHeight / 2;
-
-		scene.add(mesh);
-
-		var v = mesh.geometry.faceVertexUvs[0];
-
-		setUv(v, 0, depth / wallTextureSize, height / wallTextureSize);
-		setUv(v, 1, width / wallTextureSize, depth / wallTextureSize);
-		setUv(v, 2, width / wallTextureSize, height / wallTextureSize);
+		var wall = new Wall(scene, width, height, depth, xMin, zMin);
+		wall.init();
+		walls.push(wall);
 	}
 
 	function createFloor() {
@@ -131,5 +108,9 @@ function Lab(scene, lights) {
 		mesh.rotation.x = - Math.PI / 2;
 
 		scene.add(mesh);
+	}
+
+	this.getWalls = function () {
+		return walls;
 	}
 }

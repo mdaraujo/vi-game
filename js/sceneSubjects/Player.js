@@ -1,8 +1,11 @@
-function Player(scene) {
+function Player(scene, lab) {
 
 	const scale = 1.5;
-	const radius = scale * 0.4;
+	const radius = scale * 0.8;
+
 	const speed = 20;
+	const adjustPositionMultiplier = 2;
+
 	const maxBullets = 5;
 	const fireRate = 0.3;
 
@@ -60,21 +63,65 @@ function Player(scene) {
 	this.update = function (time, delta) {
 
 		var moveDistance = speed * delta; // speed pixels per second
+		var canMove = true;
+		var wallPos = null;
+		var walls = lab.getWalls();
 
-		if (keyboard.pressed("W")) {
-			mesh.position.z -= moveDistance;
+		for (var i = 0; i < walls.length; i++) {
+			if (collisionCircleRectangle(this, walls[i])) {
+				canMove = false;
+				wallPos = walls[i].getPosition();
+				break;
+			}
 		}
 
-		if (keyboard.pressed("S")) {
-			mesh.position.z += moveDistance;
+		if (keyboard.pressed("W")) {
+			if (canMove)
+				mesh.position.z -= moveDistance;
+			else {
+				mesh.position.z += moveDistance * adjustPositionMultiplier;
+				canMove = true;
+			}
+		}
+		else if (keyboard.pressed("S")) {
+			if (canMove)
+				mesh.position.z += moveDistance;
+			else {
+				mesh.position.z -= moveDistance * adjustPositionMultiplier;
+				canMove = true;
+			}
 		}
 
 		if (keyboard.pressed("A")) {
-			mesh.position.x += -moveDistance;
+			if (canMove)
+				mesh.position.x -= moveDistance;
+			else {
+				mesh.position.x += moveDistance * adjustPositionMultiplier;
+				canMove = true;
+			}
+		}
+		else if (keyboard.pressed("D")) {
+			if (canMove)
+				mesh.position.x += moveDistance;
+			else {
+				mesh.position.x -= moveDistance * adjustPositionMultiplier;
+				canMove = true;
+			}
 		}
 
-		if (keyboard.pressed("D")) {
-			mesh.position.x += moveDistance;
+		// player colliding with walls and not moving
+		// player position needs to be corrected
+		if (!canMove) {
+			var dx = mesh.position.x - wallPos.x;
+			var dy = mesh.position.z - wallPos.z;
+
+			var length = Math.sqrt(dx * dx + dy * dy);
+
+			dx /= length;
+			dy /= length;
+
+			mesh.position.x += dx * moveDistance * adjustPositionMultiplier;
+			mesh.position.z += dy * moveDistance * adjustPositionMultiplier;
 		}
 
 		if (time >= nextBullet) {
@@ -159,6 +206,14 @@ function Player(scene) {
 
 	this.getPosition = function () {
 		return mesh.position;
+	}
+
+	this.setPositionX = function (x) {
+		mesh.position.x = x;
+	}
+
+	this.setPositionZ = function (z) {
+		mesh.position.z = z;
 	}
 
 	this.getRadius = function () {
