@@ -9,6 +9,11 @@ var isPaused;
 var lastStopTime;
 var gameEnded;
 
+var canMoveUp;
+var canMoveDown;
+var canMoveLeft;
+var canMoveRight;
+
 function SceneManager(canvas) {
 
     lastStopTime = 0;
@@ -89,10 +94,11 @@ function SceneManager(canvas) {
 
         if (isPaused) return;
 
+        detectCollisions(elapsedTime);
+
         for (let i = 0; i < sceneSubjects.length; i++)
             sceneSubjects[i].update(elapsedTime, delta);
 
-        detectCollisions(elapsedTime);
     }
 
     function detectCollisions(elapsedTime) {
@@ -156,6 +162,54 @@ function SceneManager(canvas) {
             }
         }
 
+        canMoveUp = true;
+        canMoveDown = true;
+        canMoveLeft = true;
+        canMoveRight = true;
+
+        lab.getWalls().forEach(w => {
+            if (collisionCircleRectangle(player, w)) {
+                var playerPos = player.getPosition();
+                var wallPos = w.getPosition();
+                var dx = playerPos.x - wallPos.x;
+                var dy = playerPos.z - wallPos.z;
+
+                var length = Math.sqrt(dx * dx + dy * dy);
+
+                if (dx > 0 && dx > w.getWidth() / 2) {
+                    canMoveLeft = false;
+                }
+                else if (dx < 0 && Math.abs(dx) > w.getWidth() / 2) {
+                    canMoveRight = false;
+                }
+                else if (dy > 0 && dy > w.getDepth() / 2) {
+                    canMoveUp = false;
+                }
+                else if (dy < 0 && Math.abs(dy) > w.getDepth() / 2) {
+                    canMoveDown = false;
+                }
+            }
+        });
+
+    }
+
+    function collisionCircleRectangle(circle, rect) {
+        var circlePos = circle.getPosition();
+        var rectPos = rect.getPosition();
+
+        var dx = Math.abs(circlePos.x - rectPos.x);
+        var dy = Math.abs(circlePos.z - rectPos.z);
+
+        if (dx > (rect.getWidth() / 2 + circle.getRadius())) { return false; }
+        if (dy > (rect.getDepth() / 2 + circle.getRadius())) { return false; }
+
+        if (dx <= (rect.getWidth() / 2)) { return true; }
+        if (dy <= (rect.getDepth() / 2)) { return true; }
+
+        var cornerDistance_sq = (dx - rect.getWidth() / 2) ^ 2 +
+            (dy - rect.getDepth() / 2) ^ 2;
+
+        return (cornerDistance_sq <= (circle.getRadius() ^ 2));
     }
 
     function collisionBetweenCircles(obj1, obj2) {
@@ -190,23 +244,4 @@ function SceneManager(canvas) {
 
         renderer.setSize(width, height);
     }
-}
-
-function collisionCircleRectangle(circle, rect) {
-    var circlePos = circle.getPosition();
-    var rectPos = rect.getPosition();
-
-    var dx = Math.abs(circlePos.x - rectPos.x);
-    var dy = Math.abs(circlePos.z - rectPos.z);
-
-    if (dx > (rect.getWidth() / 2 + circle.getRadius())) { return false; }
-    if (dy > (rect.getDepth() / 2 + circle.getRadius())) { return false; }
-
-    if (dx <= (rect.getWidth() / 2)) { return true; }
-    if (dy <= (rect.getDepth() / 2)) { return true; }
-
-    var cornerDistance_sq = (dx - rect.getWidth() / 2) ^ 2 +
-        (dy - rect.getDepth() / 2) ^ 2;
-
-    return (cornerDistance_sq <= (circle.getRadius() ^ 2));
 }

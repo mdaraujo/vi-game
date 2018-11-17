@@ -1,10 +1,9 @@
 function Player(scene, lab) {
 
 	const scale = 1.5;
-	const radius = scale * 0.8;
+	const radius = scale;
 
 	const speed = 20;
-	const adjustPositionMultiplier = 2;
 
 	const maxBullets = 5;
 	const fireRate = 0.3;
@@ -63,65 +62,23 @@ function Player(scene, lab) {
 	this.update = function (time, delta) {
 
 		var moveDistance = speed * delta; // speed pixels per second
-		var canMove = true;
-		var wallPos = null;
-		var walls = lab.getWalls();
-
-		for (var i = 0; i < walls.length; i++) {
-			if (collisionCircleRectangle(this, walls[i])) {
-				canMove = false;
-				wallPos = walls[i].getPosition();
-				break;
-			}
-		}
 
 		if (keyboard.pressed("W")) {
-			if (canMove)
+			if (canMoveUp)
 				mesh.position.z -= moveDistance;
-			else {
-				mesh.position.z += moveDistance * adjustPositionMultiplier;
-				canMove = true;
-			}
 		}
 		else if (keyboard.pressed("S")) {
-			if (canMove)
+			if (canMoveDown)
 				mesh.position.z += moveDistance;
-			else {
-				mesh.position.z -= moveDistance * adjustPositionMultiplier;
-				canMove = true;
-			}
 		}
 
 		if (keyboard.pressed("A")) {
-			if (canMove)
+			if (canMoveLeft)
 				mesh.position.x -= moveDistance;
-			else {
-				mesh.position.x += moveDistance * adjustPositionMultiplier;
-				canMove = true;
-			}
 		}
 		else if (keyboard.pressed("D")) {
-			if (canMove)
+			if (canMoveRight)
 				mesh.position.x += moveDistance;
-			else {
-				mesh.position.x -= moveDistance * adjustPositionMultiplier;
-				canMove = true;
-			}
-		}
-
-		// player colliding with walls and not moving
-		// player position needs to be corrected
-		if (!canMove) {
-			var dx = mesh.position.x - wallPos.x;
-			var dy = mesh.position.z - wallPos.z;
-
-			var length = Math.sqrt(dx * dx + dy * dy);
-
-			dx /= length;
-			dy /= length;
-
-			mesh.position.x += dx * moveDistance * adjustPositionMultiplier;
-			mesh.position.z += dy * moveDistance * adjustPositionMultiplier;
 		}
 
 		if (time >= nextBullet) {
