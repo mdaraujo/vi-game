@@ -15,17 +15,23 @@ html, body {
     position: absolute;
     top: 0px;
     width: 100%;
-    margin: 5px;
 }
 
 .button {
     background-color: #555555;
     border: none;
     color: white;
-    padding: 12px 28px;
+    padding: 12px 18px;
     text-align: center;
     display: inline-block;
     font-size: 16px;
+    font-weight: bold;
     border-radius: 4px;
     cursor: pointer;
+}
+
+#gameOver {
+    margin: 70px;
+    display: none;
+    font-size: 4em;
 }
