@@ -1,4 +1,4 @@
-function Player(scene, lab) {
+function Player(scene) {
 
 	const scale = 1.5;
 	const radius = scale;
