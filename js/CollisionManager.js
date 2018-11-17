@@ -92,6 +92,17 @@ function CollisionManager(player, enemySpawner, lab) {
             }
         });
 
+        // between bullets and walls
+        player.getBullets().forEach(b => {
+            if (b.isActive()) {
+                lab.getWalls().forEach(w => {
+                    if (collisionCircleRectangle(b, w)) {
+                        b.setActive(false);
+                    }
+                });
+            }
+        });
+
     }
 
     function collisionBetweenCircles(obj1, obj2) {
