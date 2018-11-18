@@ -1,6 +1,6 @@
 function EnemySpawner(scene, player, hud) {
 
-	const maxEnemies = 12;
+	const maxEnemies = 8;
 
 	var spawnRate;
 	var nextSpawnRateChange;
@@ -12,13 +12,20 @@ function EnemySpawner(scene, player, hud) {
 
 		enemies = [];
 
-		// pool a fixed number of enemies to avoid instantiate every time
-		for (var i = 0; i < maxEnemies; i++) {
-			var enemy = new Enemy(scene, player, hud);
-			enemy.init();
-			enemy.setActive(false);
-			enemies.push(enemy);
-		}
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setPath('models/Monster/');
+		objLoader.load('Monster.obj', function (object) {
+
+			// pool a fixed number of enemies to avoid instantiate every time
+			for (var i = 0; i < maxEnemies; i++) {
+				var enemy = new Enemy(scene, player, hud, object.clone());
+				enemy.init();
+				enemy.setActive(false);
+				enemies.push(enemy);
+			}
+
+		}, null, null);
+
 		this.reset();
 	}
 

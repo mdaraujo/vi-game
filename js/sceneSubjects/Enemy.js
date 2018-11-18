@@ -1,6 +1,7 @@
-function Enemy(scene, player, hud) {
+function Enemy(scene, player, hud, object) {
 
-	const height = 5.5, radius = 2.2;
+	const radius = 1.3;
+	const scale = 0.8;
 
 	var mesh;
 	var health;
@@ -14,7 +15,7 @@ function Enemy(scene, player, hud) {
 	var type;
 	var speed;
 	const speedTypes = [12, 15, 18];
-	const colorTypes = ['#4286f4', '#706FB7', '#912522'];
+	const colorTypes = ['#DCA56F', '#275092', '#FFD700'];
 
 
 	this.init = function () {
@@ -26,20 +27,25 @@ function Enemy(scene, player, hud) {
 			map: METAL_BASE_TEXTURE,
 			normalMap: METAL_NORMAL_TEXTURE,
 			metalness: 1,
-			roughness: 0.6,
+			roughness: 0.4,
 			color: colorTypes[type]
 		});
 
-		var geometry = new THREE.CylinderGeometry(radius / 2, radius, height, 32);
-		mesh = new THREE.Mesh(geometry, material);
-		mesh.position.y = height / 2;
+		mesh = object;
+
+		mesh.scale.set(scale, scale, scale);
+
+		mesh.traverse(function (node) {
+			if (node.isMesh) node.material = material;
+		});
+
 		scene.add(mesh);
 
 		health = 5;
 		var healthMat = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 		healthSprite = new THREE.Sprite(healthMat);
-		healthSprite.position.setY(height * 0.3);
-		healthSprite.scale.set(5, 5, 1);
+		healthSprite.position.setY(scale * 14);
+		healthSprite.scale.set(7, 7, 1);
 		mesh.add(healthSprite);
 
 		this.reset();
@@ -61,6 +67,17 @@ function Enemy(scene, player, hud) {
 
 			mesh.position.x += dx * speed * delta;
 			mesh.position.z += dy * speed * delta;
+
+			var angle;
+			if (dx < 0)
+				angle = Math.asin(dx);
+			else
+				angle = Math.acos(dy);
+
+			if (dx < 0 && dy < 0) {
+				angle = Math.PI - angle;
+			}
+			mesh.rotation.y = angle;
 		}
 	}
 
@@ -75,7 +92,10 @@ function Enemy(scene, player, hud) {
 
 		type = Math.floor(Math.random() * speedTypes.length);
 		speed = speedTypes[type];
-		mesh.material.color.set(colorTypes[type]);
+
+		mesh.traverse(function (node) {
+			if (node.isMesh) node.material.color.set(colorTypes[type]);
+		});
 
 		this.setActive(true);
 	}
