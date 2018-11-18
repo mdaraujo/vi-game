@@ -1,4 +1,4 @@
-function HUD(scene) {
+function HUD(scene, lab) {
 
     var killCounter;
     var killsElement;
@@ -9,6 +9,8 @@ function HUD(scene) {
 
     var playButton;
     var gameOverElement;
+
+    var labSelect;
 
     this.init = function () {
 
@@ -23,15 +25,24 @@ function HUD(scene) {
 
         document.addEventListener("keydown", onDocumentKeyDown, false);
 
+        labSelect = document.getElementById("labSelect");
+        labSelect.addEventListener("change", changeLab);
+
+        labNumber = 1;
+        for (name in LABS) {
+            var opt = document.createElement("option");
+            opt.value = LABS[name];
+            opt.innerHTML = "Lab " + labNumber;
+            labSelect.appendChild(opt);
+            labNumber++;
+        }
+
         this.reset();
     }
 
     this.update = function (time, delta) {
         if (time >= nextTimeUpdate) {
-            date = new Date(null);
-            date.setSeconds(time);
-            var timeString = date.toISOString().substr(11, 8);
-            timeElement.innerHTML = timeString;
+            fillTimeElement(time);
             nextTimeUpdate += 1;
         }
     }
@@ -48,6 +59,7 @@ function HUD(scene) {
             lastStopTime += masterClock.getElapsedTime();
             masterClock.stop();
             playButton.innerHTML = "PLAY";
+            labSelect.disabled = false;
         }
         else {
             if (gameEnded) {
@@ -56,14 +68,31 @@ function HUD(scene) {
 
             masterClock.start();
             playButton.innerHTML = "PAUSE";
+            playButton.blur();
+            labSelect.blur();
+            labSelect.disabled = true;
         }
+    }
+
+    function changeLab() {
+        lab.loadLab(labSelect.value);
+        sceneManager.reset();
+    }
+
+    function fillTimeElement(time) {
+        date = new Date(null);
+        date.setSeconds(time);
+        var timeString = date.toISOString().substr(11, 8);
+        timeElement.innerHTML = timeString;
     }
 
     this.reset = function () {
         killCounter = 0;
         killsElement.innerHTML = killCounter;
+        fillTimeElement(0);
         nextTimeUpdate = 0;
         gameOverElement.style.display = "none";
+        labSelect.disabled = false;
     }
 
     this.endGame = function () {

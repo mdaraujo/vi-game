@@ -14,6 +14,8 @@ var canMoveDown;
 var canMoveLeft;
 var canMoveRight;
 
+var LABS = ["Ciber2005_FinalLab_Simple", "Ciber2013-final-lab", "Ciber2013-m1-lab", "Ciber2013-m2-lab"]
+
 function SceneManager(canvas) {
 
     lastStopTime = 0;
@@ -28,10 +30,10 @@ function SceneManager(canvas) {
     const renderer = buildRender(screenDimensions);
 
     var collisionManager;
-    var cameraSubject = new Camera(scene, screenDimensions);
+    var cameraSubject = new Camera(scene, screenDimensions, renderer);
     var lights = new Lights(scene);
-    var hud;
     var lab;
+    var hud;
     var player;
     var enemySpawner;
     const sceneSubjects = createSceneSubjects(scene);
@@ -56,8 +58,8 @@ function SceneManager(canvas) {
     }
 
     function createSceneSubjects(scene) {
-        hud = new HUD(scene);
         lab = new Lab(scene, lights);
+        hud = new HUD(scene, lab);
         player = new Player(scene);
         enemySpawner = new EnemySpawner(scene, player, hud);
         collisionManager = new CollisionManager(player, enemySpawner, lab);

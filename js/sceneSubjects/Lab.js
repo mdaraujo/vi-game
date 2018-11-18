@@ -8,24 +8,43 @@ function Lab(scene, lights) {
 	const floorTextureSize = 20;
 
 	var walls;
+	var floor;
 
 	this.init = function () {
 
 		walls = [];
 
+		this.loadLab(LABS[0]);
+
+	}
+
+	this.update = function (time, delta) {
+
+	}
+
+	this.loadLab = function (name) {
+
+		var path = "labs/" + name + ".xml";
+
+		if (floor) {
+			scene.remove(floor);
+		}
+
+		walls.forEach(w => {
+			w.delete();
+		});
+
+		walls.splice(0, walls.length);
+
+		var xmlhttp;
 		if (window.XMLHttpRequest) {
 			xmlhttp = new XMLHttpRequest();
 		} else {
 			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 		}
-
-		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.addEventListener("load", reqListener);
-		xmlhttp.open("GET", "labs/Ciber2005_FinalLab_Simple.xml", true);
+		xmlhttp.open("GET", path, true);
 		xmlhttp.send();
-	}
-
-	this.update = function (time, delta) {
 
 	}
 
@@ -41,6 +60,7 @@ function Lab(scene, lights) {
 		createFloor();
 		createSideWalls();
 
+		lights.delete();
 		lights.init();
 
 		var xmlWalls = xmlDoc.getElementsByTagName('Wall');
@@ -82,7 +102,7 @@ function Lab(scene, lights) {
 		var height = 2.5 * scale;
 		createWall(scale, height, labHeight, -scale, 0);
 		createWall(scale, height, labHeight, labWidth, 0);
-		createWall(labWidth + 2 * scale, height, scale, -scale, -scale);
+		createWall(labWidth + 2 * scale, 1.5 * scale, scale, -scale, -scale);
 		createWall(labWidth + 2 * scale, height, scale, -scale, labHeight);
 	}
 
@@ -103,11 +123,11 @@ function Lab(scene, lights) {
 		});
 
 		var geometry = new THREE.PlaneGeometry(labWidth, labHeight, 4, 4);
-		mesh = new THREE.Mesh(geometry, material);
+		floor = new THREE.Mesh(geometry, material);
 
-		mesh.rotation.x = - Math.PI / 2;
+		floor.rotation.x = - Math.PI / 2;
 
-		scene.add(mesh);
+		scene.add(floor);
 	}
 
 	this.getWalls = function () {

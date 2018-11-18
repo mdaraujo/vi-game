@@ -50,4 +50,8 @@ function Wall(scene, width, height, depth, xMin, zMin) {
         return depth;
     }
 
+    this.delete = function () {
+        scene.remove(mesh);
+    }
+
 }

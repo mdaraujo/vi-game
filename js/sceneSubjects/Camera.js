@@ -1,4 +1,4 @@
-function Camera(scene, { width, height }) {
+function Camera(scene, { width, height }, renderer) {
 
     const aspectRatio = width / height;
     const fieldOfView = 45;
@@ -7,7 +7,7 @@ function Camera(scene, { width, height }) {
 
     this.init = function () {
         camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
-        controls = new THREE.OrbitControls(camera);
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
 
         setPosTwo();
     }
