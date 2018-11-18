@@ -14,7 +14,7 @@ var canMoveDown;
 var canMoveLeft;
 var canMoveRight;
 
-var LABS = ["Ciber2005_FinalLab_Simple", "Ciber2013-final-lab", "Ciber2013-m1-lab", "Ciber2013-m2-lab"]
+var LABS = ["Ciber2005_FinalLab_Simple", "Ciber2013-final-lab", "Ciber2013-m1-lab", "Ciber2013-m2-lab", "Ciber2012-final-lab", "Ciber2012-m1-lab"]
 
 function SceneManager(canvas) {
 

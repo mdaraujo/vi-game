@@ -140,6 +140,7 @@ function Player(scene) {
 		healthSprite.material = new THREE.SpriteMaterial({ map: HEALTH_TEXTURES[health] });
 		mesh.position.x = 0;
 		mesh.position.z = 0;
+		mesh.rotation.y = 0;
 
 		bullets.forEach(b => {
 			if (b.isActive()) {
