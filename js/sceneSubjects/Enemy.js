@@ -13,12 +13,9 @@ function Enemy(scene, player, hud) {
 
 	var type;
 	var speed;
-	const speedTypes = [13, 16, 20];
+	const speedTypes = [12, 15, 18];
 	const colorTypes = ['#4286f4', '#706FB7', '#912522'];
-	// var moveRate = 0.3;
-	// var nextMove = -1;
-	// var nextPosition;
-	// var isMoving = false;
+
 
 	this.init = function () {
 
@@ -54,28 +51,14 @@ function Enemy(scene, player, hud) {
 			canDoDemage = true;
 		}
 
-		// if (time >= nextMove) {
-		// 	console.log("enemy move");
-		// 	isMoving = true;
-		// 	nextMove = time + moveRate;
-		// }
-		// if (isMoving) {
-		// }
-
-		// subtract (= difference vector)
 		var dx = player.getPosition().x - mesh.position.x;
 		var dy = player.getPosition().z - mesh.position.z;
 
-		// normalize (= direction vector)
-		// (a direction vector has a length of 1)
 		var length = Math.sqrt(dx * dx + dy * dy);
 		if (length > 0.1) {
 			dx /= length;
 			dy /= length;
 
-			// move
-			// delta is the elapsed time in seconds
-			// SPEED is the speed in units per second (UPS)
 			mesh.position.x += dx * speed * delta;
 			mesh.position.z += dy * speed * delta;
 		}
